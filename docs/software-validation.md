@@ -1,16 +1,24 @@
 # Software Validation
 
-## Automated checks
+## Reproducible local checks
 
-The repository provides a CMake build, a dependency-free C++ test executable registered with CTest, and a simulator run. GitHub Actions is configured to run configure, build, CTest, and simulator steps on pushes to `main` or `codex/**`, and on pull requests.
+Requires a C++17 compiler, CMake 3.16 or newer, and CTest.
 
-## Evidence
+```sh
+cmake -S . -B build
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+./build/moduos_simulator
+```
 
-- Test coverage is authored in `tests/core_tests.cpp`; this is not evidence of a passing run.
-- A passing GitHub Actions run is required before reporting the milestone as tested.
-- No physical hardware validation has been performed.
-- No display refresh-rate or power-performance measurement is claimed.
+GitHub Actions runs configure, build, CTest, and the simulator on pushes to `main` or `codex/**`, and on pull requests.
 
-## Scope/limitations
+## CI evidence
 
-The tests exercise the host core only. They do not validate concurrency, persistence, display rendering, sensor accuracy, bus errors, hot-plug electrical behavior, power switching, or embedded compiler compatibility.
+- GitHub Actions run [38159699119](https://github.com/saif12377/modous-os/actions/runs/38159699119) completed successfully on commit `e65dc2bff5a1d13276ae2593816c6e8685c3bd24`: Configure, Build, Test, and Run simulator all succeeded.
+- The initial CI run failed during Build because the typed event header did not include `<variant>`. That include was added; the later run above validates the correction.
+- Tests in `tests/core_tests.cpp` cover application transitions, event delivery, settings bounds, module protocol/state transitions, and UI mutations.
+
+## Scope and limits
+
+The CI checks exercise the host core only. No physical hardware validation has been performed. The checks do not validate concurrency, persistence, display rendering, sensor accuracy, bus errors, hot-plug electrical behavior, power switching, or embedded compiler compatibility. No display refresh-rate or power-performance measurement is claimed.
