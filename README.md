@@ -4,20 +4,33 @@ ModuOS is a modular smartwatch platform. This repository is the software foundat
 
 ## Current status
 
-The repository is being initialized. No watch hardware, display, MCU, sensor, electrical interface, or performance target has been verified in this repository yet. Treat all part numbers and interfaces in planning documents as candidates until backed by design files and manufacturer documentation.
+The software starter milestone is on branch `codex/os-core`. No watch hardware, display, MCU, sensor, electrical interface, or performance target has been verified here. Treat all parts and interfaces as candidates until backed by design files and manufacturer documentation.
 
-## Planned software foundation
+## Build, test, and run
 
-- Portable C++ application core with a host simulator.
-- Hardware interfaces kept separate from platform-specific drivers.
-- Typed events, validated settings, module lifecycle, and UI state.
-- Automated tests and reproducible CMake build instructions.
-- Hardware/software contract documented without inventing pinouts or electrical ratings.
+Requires a C++17 compiler, CMake 3.16 or newer, and CTest.
+
+```sh
+cmake -S . -B build
+cmake --build build --parallel
+ctest --test-dir build --output-on-failure
+./build/moduos_simulator
+```
+
+On Windows, run the simulator as `build\\moduos_simulator.exe`.
+
+The simulator prints simulated UI and module state only; no watch hardware or physiological readings are connected.
+
+## Software foundation
+
+- Portable C++ application core and typed synchronous event delivery.
+- Validated settings, structured log records, module descriptors and logical attach/detach lifecycle.
+- UI state for screen, theme, layout, and widget visibility.
+- Abstract display, clock, storage, and sensor interfaces.
+- CMake/CTest checks and GitHub Actions workflow.
+
+See `docs/` for architecture, proposed hardware contract, decisions, open questions, and validation scope.
 
 ## Consumer use
 
-ModuOS is intended for consumer wellness. Sensor outputs must not be represented as medical-grade measurements.
-
-## Getting started
-
-Build and test instructions will be added with the first working software milestone. No build or test result is claimed yet.
+ModuOS is intended for consumer wellness. Sensor outputs must not be represented as medical-grade measurements. No physical hardware validation or display refresh-rate claim has been made.
